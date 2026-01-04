@@ -1,10 +1,11 @@
 import { handleUpdate } from "../lib/handlers.js";
 
 export default async function handler(req, res) {
-  if (req.headers["x-telegram-bot-api-secret-token"] !== process.env.BOT_SECRET) {
-    return res.status(403).send("Forbidden");
+  try {
+    await handleUpdate(req.body);
+    res.status(200).send("OK");
+  } catch (e) {
+    console.error("WEBHOOK ERROR:", e);
+    res.status(200).send("OK");
   }
-
-  await handleUpdate(req.body);
-  res.send("OK");
 }
